@@ -15,6 +15,8 @@
 		2CB951E41A1611BE0047CBED /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CB951E31A1611BE0047CBED /* Images.xcassets */; };
 		2CB951E71A1611BE0047CBED /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CB951E51A1611BE0047CBED /* LaunchScreen.xib */; };
 		2CB951F31A1611BE0047CBED /* CloudKit_TestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CB951F21A1611BE0047CBED /* CloudKit_TestTests.m */; };
+		2CB952001A1617D00047CBED /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CB951FF1A1617D00047CBED /* CloudKit.framework */; };
+		2CB952081A162F810047CBED /* UCDCloudStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CB952071A162F810047CBED /* UCDCloudStore.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +45,10 @@
 		2CB951EC1A1611BE0047CBED /* CloudKit-TestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CloudKit-TestTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CB951F11A1611BE0047CBED /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2CB951F21A1611BE0047CBED /* CloudKit_TestTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CloudKit_TestTests.m; sourceTree = "<group>"; };
+		2CB951FC1A1617900047CBED /* CloudKit-Test.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "CloudKit-Test.entitlements"; sourceTree = "<group>"; };
+		2CB951FF1A1617D00047CBED /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		2CB952061A162F810047CBED /* UCDCloudStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UCDCloudStore.h; sourceTree = "<group>"; };
+		2CB952071A162F810047CBED /* UCDCloudStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UCDCloudStore.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2CB952001A1617D00047CBED /* CloudKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,6 +73,7 @@
 		2CB951C71A1611BE0047CBED = {
 			isa = PBXGroup;
 			children = (
+				2CB951FF1A1617D00047CBED /* CloudKit.framework */,
 				2CB951D21A1611BE0047CBED /* CloudKit-Test */,
 				2CB951EF1A1611BE0047CBED /* CloudKit-TestTests */,
 				2CB951D11A1611BE0047CBED /* Products */,
@@ -84,6 +92,8 @@
 		2CB951D21A1611BE0047CBED /* CloudKit-Test */ = {
 			isa = PBXGroup;
 			children = (
+				2CB952011A161C080047CBED /* Models */,
+				2CB951FC1A1617900047CBED /* CloudKit-Test.entitlements */,
 				2CB951D71A1611BE0047CBED /* AppDelegate.h */,
 				2CB951D81A1611BE0047CBED /* AppDelegate.m */,
 				2CB951DA1A1611BE0047CBED /* MasterViewController.h */,
@@ -122,6 +132,15 @@
 				2CB951F11A1611BE0047CBED /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		2CB952011A161C080047CBED /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				2CB952061A162F810047CBED /* UCDCloudStore.h */,
+				2CB952071A162F810047CBED /* UCDCloudStore.m */,
+			);
+			name = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -173,6 +192,12 @@
 				TargetAttributes = {
 					2CB951CF1A1611BE0047CBED = {
 						CreatedOnToolsVersion = 6.1;
+						DevelopmentTeam = Q23BMGZKSX;
+						SystemCapabilities = {
+							com.apple.iCloud = {
+								enabled = 1;
+							};
+						};
 					};
 					2CB951EB1A1611BE0047CBED = {
 						CreatedOnToolsVersion = 6.1;
@@ -227,6 +252,7 @@
 				2CB951D91A1611BE0047CBED /* AppDelegate.m in Sources */,
 				2CB951DC1A1611BE0047CBED /* MasterViewController.m in Sources */,
 				2CB951D61A1611BE0047CBED /* main.m in Sources */,
+				2CB952081A162F810047CBED /* UCDCloudStore.m in Sources */,
 				2CB951DF1A1611BE0047CBED /* DetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -349,9 +375,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "CloudKit-Test/CloudKit-Test.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = "CloudKit-Test/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -359,9 +389,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "CloudKit-Test/CloudKit-Test.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = "CloudKit-Test/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};

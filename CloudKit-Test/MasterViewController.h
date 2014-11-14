@@ -7,9 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UCDCloudStore.h"
 
 @interface MasterViewController : UITableViewController
 
+@property UCDCloudStore *cloudStore;
+@property (strong, nonatomic) IBOutlet UIView *loader;
 
 @end
 

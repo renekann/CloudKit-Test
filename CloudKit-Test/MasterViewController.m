@@ -12,6 +12,7 @@
 @interface MasterViewController ()
 
 @property NSMutableArray *objects;
+@property (nonatomic) BOOL permissionRequested;
 @end
 
 @implementation MasterViewController
@@ -22,11 +23,28 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
-    self.navigationItem.leftBarButtonItem = self.editButtonItem;
-
-    UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
-    self.navigationItem.rightBarButtonItem = addButton;
+    self.cloudStore = [[UCDCloudStore alloc] init];
+    _objects = [[NSMutableArray alloc] init];
+    
+    [self.cloudStore requestDiscoverabilityPermission:^(BOOL discoverable) {
+        
+        if (discoverable) {
+            _permissionRequested = YES;
+            [self reloadNotes];
+        } else {
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"CloudKitAtlas"
+                                                                           message:@"Getting your name using Discoverability requires permission."
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK"
+                                                             style:UIAlertActionStyleDefault
+                                                           handler:^(UIAlertAction *act) {
+                                                               [self dismissViewControllerAnimated:YES completion:nil];
+                                                           }];
+            [alert addAction:action];
+            [self presentViewController:alert animated:YES completion:nil];
+        }
+    }];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -34,23 +52,21 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)insertNewObject:(id)sender {
-    if (!self.objects) {
-        self.objects = [[NSMutableArray alloc] init];
+- (void)viewWillAppear:(BOOL)animated {
+    if(_permissionRequested) {
+        [self reloadNotes];
     }
-    [self.objects insertObject:[NSDate date] atIndex:0];
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+}
+- (IBAction)reloadNotes:(id)sender {
+    [self reloadNotes];
 }
 
-#pragma mark - Segues
+- (void)reloadNotes {
+    [self.cloudStore fetchRecordsWithType:ReferenceItemRecordName completionHandler:^(NSArray *records) {
+        self.objects.array = records;
+        [self.tableView reloadData];
+    }];
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([[segue identifier] isEqualToString:@"showDetail"]) {
-        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        NSDate *object = self.objects[indexPath.row];
-        [[segue destinationViewController] setDetailItem:object];
-    }
 }
 
 #pragma mark - Table View
@@ -66,8 +82,11 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
 
-    NSDate *object = self.objects[indexPath.row];
-    cell.textLabel.text = [object description];
+    CKRecord *record = _objects[indexPath.row];
+    
+    cell.textLabel.text = record[@"title"];
+    cell.detailTextLabel.text = record[@"desc"];
+    
     return cell;
 }
 
@@ -78,10 +97,23 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [self.objects removeObjectAtIndex:indexPath.row];
+        // Delete the row from the data source
+        [self.cloudStore deleteRecord:_objects[indexPath.row]];
+        [_objects removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
+    }   
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+
+    if ([[segue identifier] isEqualToString:@"details"])
+    {
+        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+        CKRecord *record = _objects[indexPath.row];
+        
+        DetailViewController *detail = segue.destinationViewController;
+        detail.record = record;
+        detail.cloudStore = self.cloudStore;
     }
 }
 

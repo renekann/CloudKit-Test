@@ -7,11 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UCDCloudStore.h"
 
 @interface DetailViewController : UIViewController
-
-@property (strong, nonatomic) id detailItem;
-@property (weak, nonatomic) IBOutlet UILabel *detailDescriptionLabel;
-
+@property (weak, nonatomic) IBOutlet UITextField *tfTitle;
+@property (weak, nonatomic) IBOutlet UITextView *tfDesc;
+@property (weak, nonatomic) IBOutlet UILabel *lblDate;
+@property UCDCloudStore *cloudStore;
+@property CKRecord *record;
 @end
 

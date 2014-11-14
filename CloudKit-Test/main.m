@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UCDCloudStore.h"
 #import "AppDelegate.h"
+
 
 int main(int argc, char * argv[]) {
     @autoreleasepool {
