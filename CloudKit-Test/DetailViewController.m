@@ -52,7 +52,14 @@
     if (self.tfTitle.text.length < 1) {
         [self.tfTitle resignFirstResponder];
     } else {
-        CKRecord *newRecord = [[CKRecord alloc] initWithRecordType:ReferenceItemRecordName];
+        CKRecord *newRecord;
+        
+        if(self.record) {
+            newRecord = self.record;
+        } else {
+            newRecord = [[CKRecord alloc] initWithRecordType:ReferenceItemRecordName];
+        }
+        
         newRecord[@"title"] = self.tfTitle.text;
         newRecord[@"desc"] = self.tfDesc.text;
 
