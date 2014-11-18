@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "UCDCloudStore.h"
+#import "SVProgressHUD.h"
 
 @interface MasterViewController : UITableViewController
 

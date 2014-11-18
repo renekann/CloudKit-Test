@@ -23,6 +23,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     self.cloudStore = [[UCDCloudStore alloc] init];
     _objects = [[NSMutableArray alloc] init];
     
@@ -62,8 +63,12 @@
 }
 
 - (void)reloadNotes {
+    
+    [SVProgressHUD show];
+    
     [self.cloudStore fetchRecordsWithType:ReferenceItemRecordName completionHandler:^(NSArray *records) {
         self.objects.array = records;
+        [SVProgressHUD dismiss];
         [self.tableView reloadData];
     }];
 
